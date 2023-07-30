@@ -6,7 +6,5 @@ export function getDisplayDate() {
     let dayNumber = date.getDate();
     let month = MONTHS[date.getMonth()];
 
-    let dipsplayDate = `${day} ${dayNumber} ${month}`;
-
-    console.log(dipsplayDate);
+    return `${day} ${dayNumber} ${month}`;
 }
