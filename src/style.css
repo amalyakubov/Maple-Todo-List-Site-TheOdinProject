@@ -48,6 +48,7 @@ body {
 
     background-image: url(../img/background.jpg);
     background-size: cover;
+    background-position: center;
 }
 
 #taskInput {
@@ -59,7 +60,7 @@ body {
     width: 50%;
     margin-left: 20%;
     border: none;
-    background-color: rgba(77, 46, 46, 0.4);
+    background-color: rgba(255, 245, 245, 0.4);
     backdrop-filter: blur(2em);
 }
 
@@ -88,6 +89,23 @@ body {
 }
 
 #taskcontainer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
     margin: 20px;
     height: 700px;
+
+}
+
+#taskcontainer div {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    background-color: white;
+    border-radius: 4px;
+}
+
+#taskcontainer div p {
+    margin: 0;
+    margin-left: 20px;
 }
