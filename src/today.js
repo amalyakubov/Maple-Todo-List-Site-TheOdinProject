@@ -1,7 +1,6 @@
 import { getDisplayDate } from "./time.js";
-import { taskFactory } from "./item-constructor.js";
+import { saveTask, taskFactory } from "./item-constructor.js";
 
-let TASKARRAY = [];
 
 export function loadToday() {
     const CONTAINER = document.getElementById('main');
@@ -18,8 +17,12 @@ export function loadToday() {
     HEADERCONTAINER.id = 'header';
     CONTAINER.appendChild(HEADERCONTAINER);
 
+    const TASKCONTAINER = document.createElement('div');
+    TASKCONTAINER.id = 'taskcontainer';
+    CONTAINER.appendChild(TASKCONTAINER);   
     loadTaskCreator();
     addInputListener();
+    updateTaskDisplay();
 }
 
 function loadTaskCreator() {
@@ -33,13 +36,40 @@ function loadTaskCreator() {
 }
 
 function addInputListener() { 
-    let dummy = document.getElementById('taskInput');
-    dummy.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter' && document.hasFocus()) {
-            let task = new taskFactory(dummy.value);
-            TASKARRAY.push(task);
-            console.log(TASKARRAY);
+    let input = document.getElementById('taskInput');
+    input.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter' && document.hasFocus() && input.value !== '') {
+            let task = new taskFactory(input.value);
+            saveTask(task);
+            updateTaskDisplay();
         }
     })
     
+}
+
+function updateTaskDisplay() {
+    const TASKCONTAINER = document.getElementById('taskcontainer');
+    while (TASKCONTAINER.hasChildNodes()) {
+        TASKCONTAINER.removeChild(TASKCONTAINER.firstChild);
+    }
+
+    let array = [];
+    for (const key in localStorage) {
+        if (!localStorage.hasOwnProperty(key)) {
+            continue;
+        }
+        let taskObject = JSON.parse(localStorage.getItem(key));
+        array.push(taskObject);
+    }
+    array.sort((function (a, b) {
+        return a.dateCreated.localeCompare(b.dateCreated);
+    } ))
+
+    for (const taskObject in array) {
+        let task = document.createElement('div');
+        let titleElement = document.createElement('p');
+        titleElement.innerHTML = array[taskObject].title;
+        task.appendChild(titleElement);
+        TASKCONTAINER.appendChild(task);
+    }
 }
