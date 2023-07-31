@@ -31,7 +31,7 @@ function loadTaskCreator() {
     inputBox.type = 'text';
     inputBox.id = 'taskInput';
     inputBox.name = 'taskInput';
-    inputBox.placeholder = 'Add a task';
+    inputBox.value = 'Add a task'; 
     CONTAINER.appendChild(inputBox);
 }
 
@@ -42,7 +42,14 @@ function addInputListener() {
             let task = new taskFactory(input.value);
             saveTask(task);
             updateTaskDisplay();
+            resetInput();
         }
+    })
+    input.addEventListener('focus', () => {
+        input.value = '';
+    })
+    input.addEventListener('focusout', () => {
+        resetInput();
     })
     
 }
@@ -72,4 +79,10 @@ function updateTaskDisplay() {
         task.appendChild(titleElement);
         TASKCONTAINER.appendChild(task);
     }
+}
+
+function resetInput () {
+    let input = document.getElementById('taskInput');
+    input.value = 'Add a task';
+    document.activeElement.blur();
 }
