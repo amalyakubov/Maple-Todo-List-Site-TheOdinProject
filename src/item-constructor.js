@@ -11,6 +11,15 @@ export function taskFactory(title, description, dueDate, priority, notes, projec
     this.dateCreated = new Date();
 }
 
+export function completeUncompleteTask(task) {
+    if (task.complete === true) {
+        task.complete = false;
+    } else {
+        task.complete = true;
+    }
+    localStorage.setItem(task.title, JSON.stringify(task));
+}
+
 export function saveTask(task) {
     localStorage.setItem(task.title, JSON.stringify(task));
 }
@@ -19,9 +28,6 @@ function createNewProject(name) {
     this.name = name;
 }  
 
-function completeTask(task) {
-    this.complete = true;
-}
 
 
 

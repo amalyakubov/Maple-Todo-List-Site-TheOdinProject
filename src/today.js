@@ -1,5 +1,6 @@
 import { getDisplayDate } from "./time.js";
-import { saveTask, taskFactory } from "./item-constructor.js";
+import { completeTask, completeUncompleteTask, saveTask, taskFactory } from "./item-constructor.js";
+import { add } from "date-fns";
 
 
 export function loadToday() {
@@ -19,9 +20,10 @@ export function loadToday() {
 
     const TASKCONTAINER = document.createElement('div');
     TASKCONTAINER.id = 'taskcontainer';
-    CONTAINER.appendChild(TASKCONTAINER);   
+    CONTAINER.appendChild(TASKCONTAINER);
+
     loadTaskCreator();
-    addInputListener();
+    addInputListeners();
     updateTaskDisplay();
 }
 
@@ -35,7 +37,7 @@ function loadTaskCreator() {
     CONTAINER.appendChild(inputBox);
 }
 
-function addInputListener() { 
+function addInputListeners  () { 
     let input = document.getElementById('taskInput');
     input.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && document.hasFocus() && input.value !== '') {
@@ -75,10 +77,32 @@ function updateTaskDisplay() {
     for (const taskObject in array) {
         let task = document.createElement('div');
         let titleElement = document.createElement('p');
+        titleElement.id = 'title-element';
         titleElement.innerHTML = array[taskObject].title;
+        let button = document.createElement('button');
+        button.classList.add('do');
+
+        if (!button.classList.contains('hasevl')) {
+            button.addEventListener('click', () => {
+                let taskObject = JSON.parse(localStorage.getItem(titleElement.textContent));
+                completeUncompleteTask(taskObject);
+                button.classList.add('hasevl');
+                task.classList.remove('done');
+                updateTaskDisplay();
+            })
+
+        }
+
+        task.appendChild(button);
         task.appendChild(titleElement);
         TASKCONTAINER.appendChild(task);
-    }
+
+        if (array[taskObject].complete === true ) {
+            task.classList.add('done');
+            titleElement.style.textDecorationLine = 'line-through';
+            button.style.backgroundColor = 'black';
+        }
+    }   
 }
 
 function resetInput () {
