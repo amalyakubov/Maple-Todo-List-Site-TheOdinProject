@@ -123,3 +123,22 @@ button.do {
     background-color: white;
     border: 1px solid black;
 }
+
+#widget {
+    background-color: whitesmoke;
+    border-radius: 15px;
+    width: 900px;
+    height: 700px;
+    position: absolute;
+    top: 20vh;
+    left: 30vw;
+}
+
+#widget #widget-nav {
+    justify-content: space-between;
+    padding: 10px;
+}
+
+#widget div {
+    display: flex;
+}
