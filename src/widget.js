@@ -34,6 +34,29 @@ export function loadWidget(task, taskObject) {
     HEADER.appendChild(title);
     WIDGET.appendChild(HEADER);
 
+    const DESCRIPTIONCONTAINER = document.createElement('div');
+    const DESCRIPTIONLABEL = document.createElement('label');
+    DESCRIPTIONLABEL.for = 'description';
+    DESCRIPTIONLABEL.textContent = 'Description';
+
+    const GROWWRAP = document.createElement('div');
+    GROWWRAP.id = 'grow-wrap';
+    const DESCRIPTIONINPUT = document.createElement('textarea');
+    DESCRIPTIONINPUT.id = 'description';
+    DESCRIPTIONINPUT.name = 'description';
+    DESCRIPTIONINPUT.oninput = "this.parentNode.dataset.replicatedValue = this.value";
+    GROWWRAP.appendChild(DESCRIPTIONINPUT);
+
+    DESCRIPTIONCONTAINER.appendChild(DESCRIPTIONLABEL);
+    DESCRIPTIONCONTAINER.appendChild(GROWWRAP);
+    WIDGET.appendChild(DESCRIPTIONCONTAINER);
+
+    DESCRIPTIONINPUT.onkeydown = function() {
+        let scrollHeight = DESCRIPTIONINPUT.scrollHeight;
+        document.getElementById("description").style.height = scrollHeight + 'px';
+    };
+    
+
     const LIST = document.createElement('div');
 
     const DATE = document.createElement('p');

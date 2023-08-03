@@ -12,6 +12,10 @@ body {
     background-color: white;
 }
 
+P {
+    margin: 0
+}
+
 :root {
     font-family: 'DM Sans', sans-serif;
     color: black;
@@ -132,13 +136,41 @@ button.do {
     position: absolute;
     top: 20vh;
     left: 30vw;
+    overflow: auto;
+}
+
+#widget > div {
+    padding: 10px;
 }
 
 #widget #widget-nav {
     justify-content: space-between;
-    padding: 10px;
+    padding: 15px;
+}
+
+#widget-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 30px;
+    font-weight: 500;
 }
 
 #widget div {
     display: flex;
+    gap: 10px;
+}
+
+textarea {
+    border-radius: 10px;
+    height: 2vh;
+    font-size: 500;
+    border: 0.5 solid grey;
+    box-shadow: none;
+    resize: none;
+    overflow: none;
+    outline: none;
+    overflow-y: hidden;
+    font-family: 'DM Sans', sans-serif;
+    box-sizing: border-box;
 }
