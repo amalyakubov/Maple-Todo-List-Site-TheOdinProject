@@ -1,4 +1,4 @@
-import { completeUncompleteTask } from "./item-constructor";
+import { completeUncompleteTask, setDescription } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
@@ -6,6 +6,7 @@ export function loadWidget(task, taskObject) {
     if (!document.getElementById('widget')) {
         const WIDGET = document.createElement('div');
     WIDGET.id = 'widget';
+    document.body.appendChild(WIDGET);
 
     const NAV = document.createElement('div');
     NAV.id = 'widget-nav';
@@ -31,40 +32,29 @@ export function loadWidget(task, taskObject) {
     console.log(task);
     title.textContent = task.querySelector('p').textContent;
 
+    if (taskObject.complete === true ) {
+        title.style.textDecoration = 'line-through';
+    }
+
     HEADER.appendChild(createTaskButton(task, taskObject));
     HEADER.appendChild(title);
     WIDGET.appendChild(HEADER);
 
     const DESCRIPTIONCONTAINER = document.createElement('div');
+    DESCRIPTIONCONTAINER.id = 'description-container';
     const DESCRIPTIONLABEL = document.createElement('label');
     DESCRIPTIONLABEL.for = 'description';
     DESCRIPTIONLABEL.textContent = 'Description';
 
     const GROWWRAP = document.createElement('div');
     GROWWRAP.id = 'grow-wrap';
-    const DESCRIPTIONINPUT = document.createElement('textarea');
-    DESCRIPTIONINPUT.id = 'description';
-    DESCRIPTIONINPUT.name = 'description';
-    DESCRIPTIONINPUT.oninput = "this.parentNode.dataset.replicatedValue = this.value";
-    GROWWRAP.appendChild(DESCRIPTIONINPUT);
-
-    DESCRIPTIONINPUT.addEventListener('click', () => {
-        expandTextArea(DESCRIPTIONINPUT);
-    })
+    let description = createDescription(taskObject);
+    GROWWRAP.appendChild(description);
 
     DESCRIPTIONCONTAINER.appendChild(DESCRIPTIONLABEL);
     DESCRIPTIONCONTAINER.appendChild(GROWWRAP);
-    WIDGET.appendChild(DESCRIPTIONCONTAINER);
-    
-    let scrollHeight = 100;
 
-    DESCRIPTIONINPUT.onkeydown = function() {
-        if (scrollHeight < DESCRIPTIONINPUT.scrollHeight) { 
-            scrollHeight = DESCRIPTIONINPUT.scrollHeight;
-            document.getElementById("description").style.height = scrollHeight + 'px';
-        }
-    };
-    
+    WIDGET.appendChild(DESCRIPTIONCONTAINER);
 
     const LIST = document.createElement('div');
 
@@ -103,9 +93,13 @@ export function loadWidget(task, taskObject) {
     LIST.appendChild(PRIORITYCONTAINER);
 
     WIDGET.appendChild(LIST);
-    document.body.appendChild(WIDGET);
 
 
+    let button = WIDGET.getElementsByClassName('do')[0];
+    console.log(button);
+    if (taskObject.complete === true) {
+        button.style.backgroundColor = 'black';
+    }
     }
 }
 
@@ -113,12 +107,17 @@ export function loadWidget(task, taskObject) {
 function createTaskButton (task, taskObject) {
     let button = document.createElement('button');
     button.classList.add('do');
+    
     button.addEventListener('click', () => {
         completeUncompleteTask(taskObject);
         if (taskObject.complete === true) {
             button.style.backgroundColor = 'black';
+            let p = document.getElementById('widget-header').lastElementChild;
+            p.style.textDecorationLine = 'line-through';
         } else {
             button.style.backgroundColor = 'white';
+            let p = document.getElementById('widget-header').lastElementChild;
+            p.style.textDecorationLine = 'none';
         }
         button.classList.add('hasevl');
         task.classList.remove('done');
@@ -128,7 +127,55 @@ function createTaskButton (task, taskObject) {
 }
 
 function expandTextArea(textarea)  {
-    textarea.style.height = '100px';
-    textarea.style.width = '600px';
-    textarea.style.borderRadius = '5px';
+    textarea.classList.add('expanded');
+}
+
+function textAreaToParag(textarea, taskObject) {
+    const DESCRIPTIONCONTAINER = document.getElementById('description-container');
+    let p = document.createElement('p');
+    p.id = 'paragraph';
+    p.textContent = textarea.value;
+    textarea.remove();
+    DESCRIPTIONCONTAINER.appendChild(p);
+    p.addEventListener('click', () => {
+        let textArea = document.createElement('textarea');
+        textArea.innerText = p.textContent;
+        p.remove();
+        let description = createDescription(taskObject);
+        description.value = p.textContent;
+        DESCRIPTIONCONTAINER.appendChild(description);  
+    })
+}
+
+function createDescription(taskObject) {
+    const DESCRIPTIONINPUT = document.createElement('textarea');
+    DESCRIPTIONINPUT.id = 'description';
+    DESCRIPTIONINPUT.name = 'description';
+    let value = taskObject.description;
+    DESCRIPTIONINPUT.value = value;
+
+    DESCRIPTIONINPUT.addEventListener('click', () => {
+        expandTextArea(DESCRIPTIONINPUT);
+    })
+
+    DESCRIPTIONINPUT.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            taskObject.description = DESCRIPTIONINPUT.value;
+            DESCRIPTIONINPUT.blur();
+            DESCRIPTIONINPUT.classList.remove('expanded');
+            textAreaToParag(DESCRIPTIONINPUT, taskObject);
+            setDescription(taskObject);
+        }
+    })
+
+    let scrollHeight = 100;
+
+    DESCRIPTIONINPUT.onkeydown = function() {
+        if (scrollHeight < DESCRIPTIONINPUT.scrollHeight) { 
+            scrollHeight = DESCRIPTIONINPUT.scrollHeight;
+            document.getElementById("description").style.height = scrollHeight + 'px';
+        }
+    };
+
+    return DESCRIPTIONINPUT;
 }

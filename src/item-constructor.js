@@ -20,6 +20,10 @@ export function completeUncompleteTask(task) {
     localStorage.setItem(task.title, JSON.stringify(task));
 }
 
+export function setDescription(task) {
+    localStorage.setItem(task.title, JSON.stringify(task));
+}
+
 export function saveTask(task) {
     localStorage.setItem(task.title, JSON.stringify(task));
 }

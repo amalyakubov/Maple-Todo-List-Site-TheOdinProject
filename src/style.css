@@ -129,6 +129,7 @@ button.do {
 }
 
 #widget {
+    font-size: 20px;
     background-color: #f1f1f1;
     border-radius: 15px;
     width: 900px;
@@ -148,22 +149,27 @@ button.do {
     padding: 15px;
 }
 
-#widget-header {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 30px;
-    font-weight: 500;
-}
-
 #widget div {
     display: flex;
     gap: 10px;
 }
 
+#widget #widget-header {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    font-size: 30px;
+    font-weight: 500;
+}
+
+#widget button {
+    margin-left: 10px;
+}
+
 textarea {
-    height: 2vh;
-    font-size: 500;
+    height: 3ch;
+    font-size: 18px;
+    font-weight: 500;
     border: 0.5 solid grey;
     box-shadow: none;
     resize: none;
@@ -172,4 +178,15 @@ textarea {
     overflow-y: hidden;
     font-family: 'DM Sans', sans-serif;
     box-sizing: border-box;
+    padding: 10px;
+}
+
+textarea.expanded {
+    height: 100px;
+    width: 600px;
+    border-radius: 5px;
+}
+
+#description-container p {
+    font-weight: 500;
 }

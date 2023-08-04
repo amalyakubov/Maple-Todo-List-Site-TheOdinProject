@@ -1,5 +1,5 @@
 import { getDisplayDate } from "./time.js";
-import { completeTask, completeUncompleteTask, saveTask, taskFactory } from "./item-constructor.js";
+import { completeUncompleteTask, saveTask, taskFactory } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
 
