@@ -2,6 +2,7 @@ import { completeUncompleteTask } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
+
     if (!document.getElementById('widget')) {
         const WIDGET = document.createElement('div');
     WIDGET.id = 'widget';
@@ -47,13 +48,21 @@ export function loadWidget(task, taskObject) {
     DESCRIPTIONINPUT.oninput = "this.parentNode.dataset.replicatedValue = this.value";
     GROWWRAP.appendChild(DESCRIPTIONINPUT);
 
+    DESCRIPTIONINPUT.addEventListener('click', () => {
+        expandTextArea(DESCRIPTIONINPUT);
+    })
+
     DESCRIPTIONCONTAINER.appendChild(DESCRIPTIONLABEL);
     DESCRIPTIONCONTAINER.appendChild(GROWWRAP);
     WIDGET.appendChild(DESCRIPTIONCONTAINER);
+    
+    let scrollHeight = 100;
 
     DESCRIPTIONINPUT.onkeydown = function() {
-        let scrollHeight = DESCRIPTIONINPUT.scrollHeight;
-        document.getElementById("description").style.height = scrollHeight + 'px';
+        if (scrollHeight < DESCRIPTIONINPUT.scrollHeight) { 
+            scrollHeight = DESCRIPTIONINPUT.scrollHeight;
+            document.getElementById("description").style.height = scrollHeight + 'px';
+        }
     };
     
 
@@ -116,4 +125,10 @@ function createTaskButton (task, taskObject) {
         updateTaskDisplay();
     })
     return button;
+}
+
+function expandTextArea(textarea)  {
+    textarea.style.height = '100px';
+    textarea.style.width = '600px';
+    textarea.style.borderRadius = '5px';
 }

@@ -162,7 +162,6 @@ button.do {
 }
 
 textarea {
-    border-radius: 10px;
     height: 2vh;
     font-size: 500;
     border: 0.5 solid grey;
