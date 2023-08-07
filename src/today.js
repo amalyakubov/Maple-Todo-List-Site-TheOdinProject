@@ -1,5 +1,5 @@
 import { getDisplayDate } from "./time.js";
-import { completeUncompleteTask, saveTask, taskFactory } from "./item-constructor.js";
+import { completeUncompleteTask, taskFactory, updateTask } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
 
@@ -42,7 +42,7 @@ function addInputListeners  () {
     input.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && document.hasFocus() && input.value !== '') {
             let task = new taskFactory(input.value);
-            saveTask(task);
+            updateTask();
             updateTaskDisplay();
             resetInput();
         }

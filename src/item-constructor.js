@@ -20,13 +20,20 @@ export function completeUncompleteTask(task) {
     localStorage.setItem(task.title, JSON.stringify(task));
 }
 
-export function setDescription(task) {
+export function updateTask(task) {
     localStorage.setItem(task.title, JSON.stringify(task));
 }
 
-export function saveTask(task) {
-    localStorage.setItem(task.title, JSON.stringify(task));
+export function setDescription(task, description) {
+    task.description = description;
+    updateTask(task);
+} 
+
+export function setPriority (task, priority) {
+    task.priority = priority;
+    updateTask(task);
 }
+
 
 function createNewProject(name) {
     this.name = name;

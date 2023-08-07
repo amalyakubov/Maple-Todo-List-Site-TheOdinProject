@@ -1,4 +1,4 @@
-import { completeUncompleteTask, setDescription } from "./item-constructor";
+import { completeUncompleteTask, updateTask, setDescription, setPriority } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
@@ -18,6 +18,7 @@ export function loadWidget(task, taskObject) {
     exitButton.textContent = 'Exit';
 
     exitButton.addEventListener('click', () => {
+        setPriority(taskObject, SELECT.value);
         WIDGET.remove();
         
     })
@@ -29,7 +30,6 @@ export function loadWidget(task, taskObject) {
     HEADER.id = 'widget-header';
 
     let title = document.createElement('p');
-    console.log(task);
     title.textContent = task.querySelector('p').textContent;
 
     if (taskObject.complete === true ) {
@@ -44,7 +44,7 @@ export function loadWidget(task, taskObject) {
     DESCRIPTIONCONTAINER.id = 'description-container';
     const DESCRIPTIONLABEL = document.createElement('label');
     DESCRIPTIONLABEL.for = 'description';
-    DESCRIPTIONLABEL.textContent = 'Description';
+    DESCRIPTIONLABEL.textContent = 'Description:';
 
     const GROWWRAP = document.createElement('div');
     GROWWRAP.id = 'grow-wrap';
@@ -59,7 +59,7 @@ export function loadWidget(task, taskObject) {
     const LIST = document.createElement('div');
 
     const DATE = document.createElement('p');
-    DATE.textContent = 'dummy';
+    DATE.textContent = 'Priority:';
     LIST.appendChild(DATE);
 
     const PRIORITYCONTAINER = document.createElement('div');
@@ -69,6 +69,11 @@ export function loadWidget(task, taskObject) {
     const SELECT = document.createElement('select');
     SELECT.name = 'priorities';
     SELECT.id = 'priority';
+    
+    PRIORITYCONTAINER.appendChild(SELECT);
+    LIST.appendChild(PRIORITYCONTAINER);
+    WIDGET.appendChild(LIST);
+
     
     let optionOne = document.createElement('option');
     optionOne.value = 1;
@@ -89,14 +94,14 @@ export function loadWidget(task, taskObject) {
     optionFour.value = 4;
     optionFour.textContent = 'Four';
     SELECT.appendChild(optionFour);
-    PRIORITYCONTAINER.appendChild(SELECT);
-    LIST.appendChild(PRIORITYCONTAINER);
 
-    WIDGET.appendChild(LIST);
-
+    if (JSON.parse(localStorage.getItem(taskObject.title)).priority) {
+        let priority = JSON.parse(localStorage.getItem(taskObject.title)).priority;
+        let select = document.querySelector('select');
+        select.value = priority;
+    }
 
     let button = WIDGET.getElementsByClassName('do')[0];
-    console.log(button);
     if (taskObject.complete === true) {
         button.style.backgroundColor = 'black';
     }
@@ -160,11 +165,10 @@ function createDescription(taskObject) {
 
     DESCRIPTIONINPUT.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
-            taskObject.description = DESCRIPTIONINPUT.value;
+            setDescription(taskObject, DESCRIPTIONINPUT.value);
             DESCRIPTIONINPUT.blur();
             DESCRIPTIONINPUT.classList.remove('expanded');
             textAreaToParag(DESCRIPTIONINPUT, taskObject);
-            setDescription(taskObject);
         }
     })
 
