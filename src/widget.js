@@ -1,5 +1,4 @@
-import { sub } from "date-fns";
-import { completeUncompleteTask, setDescription, setPriority } from "./item-constructor";
+import { completeUncompleteTask, setDescription, setPriority, setDate } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
@@ -20,6 +19,7 @@ export function loadWidget(task, taskObject) {
 
     exitButton.addEventListener('click', () => {
         setPriority(taskObject, SELECT.value);
+        setDate(taskObject, new Date(DATEINPUT.value));
         WIDGET.remove();
         
     })
@@ -108,10 +108,28 @@ export function loadWidget(task, taskObject) {
     optionFour.textContent = 'Four';
     SELECT.appendChild(optionFour);
 
+    SELECT.addEventListener('keypress', function (e) { 
+        if (e.key === 'Enter') {
+            setPriority(taskObject, SELECT.value);
+        }
+    })
+
+    DATEINPUT.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            setDate(taskObject, new Date(DATEINPUT.value));
+        }
+    })
+
     if (JSON.parse(localStorage.getItem(taskObject.title)).priority) {
         let priority = JSON.parse(localStorage.getItem(taskObject.title)).priority;
         let select = document.querySelector('select');
         select.value = priority;
+    }
+
+    if (JSON.parse(localStorage.getItem(taskObject.title)).dueDate) {
+        let date = JSON.parse(localStorage.getItem(taskObject.title)).dueDate;
+        let final = date.substring(0, 10);
+        DATEINPUT.value = final;
     }
 
     let button = WIDGET.getElementsByClassName('do')[0];
@@ -119,6 +137,8 @@ export function loadWidget(task, taskObject) {
         button.style.backgroundColor = 'black';
     }
     }
+
+    
 }
 
 

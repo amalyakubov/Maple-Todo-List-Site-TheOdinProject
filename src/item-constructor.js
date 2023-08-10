@@ -34,6 +34,11 @@ export function setPriority (task, priority) {
     updateTask(task);
 }
 
+export function setDate(task, date) {
+    task.dueDate = date;
+    updateTask(task);
+}
+
 
 function createNewProject(name) {
     this.name = name;
