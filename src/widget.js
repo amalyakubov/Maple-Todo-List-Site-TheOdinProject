@@ -60,8 +60,9 @@ export function loadWidget(task, taskObject) {
     const LIST = document.createElement('div');
 
     const DATECONTAINER = document.createElement('div');
-    const DATELABEL = document.createElement('p');
+    const DATELABEL = document.createElement('label');
     DATELABEL.for = 'date';
+    DATELABEL.textContent = 'Date:';
 
     const DATEINPUT = document.createElement('input');
     DATEINPUT.type = 'date';
