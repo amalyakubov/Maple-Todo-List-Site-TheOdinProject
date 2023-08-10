@@ -42,7 +42,7 @@ function addInputListeners  () {
     input.addEventListener('keypress', function (e) {
         if (e.key === 'Enter' && document.hasFocus() && input.value !== '') {
             let task = new taskFactory(input.value);
-            updateTask();
+            updateTask(task);
             updateTaskDisplay();
             resetInput();
         }
@@ -107,7 +107,8 @@ export function updateTaskDisplay() {
         task.appendChild(button);
         task.appendChild(titleElement);
         TASKCONTAINER.appendChild(task);
-
+        
+        // Adds the styling to the button and a task title, if it's completed
         if (array[taskObject].complete === true ) {
             task.classList.add('done');
             titleElement.style.textDecorationLine = 'line-through';

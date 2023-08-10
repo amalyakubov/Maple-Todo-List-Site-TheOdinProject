@@ -1,4 +1,5 @@
-import { completeUncompleteTask, updateTask, setDescription, setPriority } from "./item-constructor";
+import { sub } from "date-fns";
+import { completeUncompleteTask, setDescription, setPriority } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
@@ -58,9 +59,20 @@ export function loadWidget(task, taskObject) {
 
     const LIST = document.createElement('div');
 
-    const DATE = document.createElement('p');
-    DATE.textContent = 'Priority:';
-    LIST.appendChild(DATE);
+    const DATECONTAINER = document.createElement('div');
+    const DATELABEL = document.createElement('p');
+    DATELABEL.for = 'date';
+
+    const DATEINPUT = document.createElement('input');
+    DATEINPUT.type = 'date';
+    DATEINPUT.id = 'date';
+    DATEINPUT.name = 'due';
+    DATEINPUT.min = new Date().toISOString().split("T")[0];
+
+    DATECONTAINER.appendChild(DATELABEL);
+    DATECONTAINER.appendChild(DATEINPUT);
+    WIDGET.appendChild(DATECONTAINER);
+
 
     const PRIORITYCONTAINER = document.createElement('div');
     const LABEL = document.createElement('label');
@@ -69,7 +81,8 @@ export function loadWidget(task, taskObject) {
     const SELECT = document.createElement('select');
     SELECT.name = 'priorities';
     SELECT.id = 'priority';
-    
+
+    PRIORITYCONTAINER.appendChild(LABEL);
     PRIORITYCONTAINER.appendChild(SELECT);
     LIST.appendChild(PRIORITYCONTAINER);
     WIDGET.appendChild(LIST);
