@@ -1,13 +1,13 @@
 import { getDate } from "date-fns";
 
-export function taskFactory(title, description, dueDate, priority, notes, project) {
+export function taskFactory(title, description, dueDate, priority, notes, currentProject) {
     this.title = title;
     this.description = description;
     this.complete = false;
     this.dueDate = dueDate;
     this.priority = priority;
     this.notes = notes;
-    this.project = project;
+    this.project = currentProject;
     this.dateCreated = new Date();
 }
 

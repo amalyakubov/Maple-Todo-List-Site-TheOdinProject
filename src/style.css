@@ -22,7 +22,7 @@ P {
 }
 
 #navigation {
-    background-color: rgb(235, 235, 235);
+    background-color: rgb(255, 255, 255);
     font-size: 24px;
     display: flex;
     flex-direction: column;
@@ -31,11 +31,21 @@ P {
     gap: 10px;
 }
 
+#new-project {
+    background-color: white;
+    border: 1px solid black;
+    font-size: 24px;
+    border-radius: 140px;
+    min-height: 20px;
+    width: 50px;
+    margin-left: -10px;
+}
+
 #projects {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
+    gap: 10px;
+}   
 
 #projects div {
     color: rgb(46, 46, 46);
@@ -147,6 +157,11 @@ button.do {
 #widget #widget-nav {
     justify-content: space-between;
     padding: 15px;
+}
+
+#widget-nav p {
+    font-weight: 500;
+    font-size: 24px;
 }
 
 #widget div {

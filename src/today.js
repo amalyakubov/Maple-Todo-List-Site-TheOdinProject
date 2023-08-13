@@ -2,6 +2,8 @@ import { getDisplayDate } from "./time.js";
 import { completeUncompleteTask, taskFactory, updateTask } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
+let currentProject = 'Today';
+export default currentProject;
 
 export function loadToday() {
     const CONTAINER = document.getElementById('main');

@@ -1,5 +1,5 @@
 import { completeUncompleteTask, setDescription, setPriority, setDate } from "./item-constructor";
-import { updateTaskDisplay } from "./today";
+import currentProject, { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
 
@@ -11,7 +11,8 @@ export function loadWidget(task, taskObject) {
     const NAV = document.createElement('div');
     NAV.id = 'widget-nav';
     const PROJECT = document.createElement('p');
-    PROJECT.textContent = 'Project : X';
+
+    PROJECT.textContent = currentProject;
     NAV.appendChild(PROJECT);
 
     const exitButton = document.createElement('button');
