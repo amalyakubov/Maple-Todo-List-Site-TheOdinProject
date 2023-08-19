@@ -34,6 +34,8 @@ export function loadWidget(task, taskObject) {
     let title = document.createElement('p');
     title.textContent = task.querySelector('p').textContent;
 
+    console.log(taskObject);
+
     if (taskObject.complete === true ) {
         title.style.textDecoration = 'line-through';
     }

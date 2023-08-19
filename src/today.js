@@ -1,5 +1,5 @@
 import { getDisplayDate } from "./time.js";
-import { completeUncompleteTask, taskFactory, updateTask } from "./item-constructor.js";
+import { completeUncompleteTask, getCurrentProject, setCurrentProject, taskFactory, updateCurrentProject, updateLocalProjects, updateTask } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
 let currentProject = 'Today';
@@ -27,6 +27,9 @@ export function loadToday() {
     loadTaskCreator();
     addInputListeners();
     updateTaskDisplay();
+    AddProjectsEventListner();
+    getCurrentProject();
+    loadProjects();
 }
 
 function loadTaskCreator() {
@@ -66,11 +69,13 @@ export function updateTaskDisplay() {
 
     let array = [];
     for (const key in localStorage) {
-        if (!localStorage.hasOwnProperty(key)) {
-            continue;
+        if (key !== 'current-project' && key !== 'projectList') {
+            if (!localStorage.hasOwnProperty(key)) {
+                continue;
+            }
+            let taskObject = JSON.parse(localStorage.getItem(key));
+            array.push(taskObject);
         }
-        let taskObject = JSON.parse(localStorage.getItem(key));
-        array.push(taskObject);
     }
     array.sort((function (a, b) {
         return a.dateCreated.localeCompare(b.dateCreated);
@@ -116,6 +121,7 @@ export function updateTaskDisplay() {
             titleElement.style.textDecorationLine = 'line-through';
             button.style.backgroundColor = 'black';
         }
+        
     }   
 }
 
@@ -123,4 +129,61 @@ function resetInput () {
     let input = document.getElementById('taskInput');
     input.value = 'Add a task';
     document.activeElement.blur();
+}
+
+function AddProjectsEventListner() {
+    const BUTTON = document.getElementById('new-project');
+    BUTTON.addEventListener('click', () => {
+        showAddProjectWidget();
+    })
+}
+
+function showAddProjectWidget() {
+if (!document.getElementById('add-project-input')) {
+    const NAVIGATION = document.getElementById('navigation')
+    const ADDPROJECTCONTAINER = document.createElement('div');
+    ADDPROJECTCONTAINER.id = 'create-project';
+    const INPUTCONTAINER = document.createElement('div');
+    ADDPROJECTCONTAINER.appendChild(INPUTCONTAINER);
+    const ADDPROJECT = document.createElement('input');
+    INPUTCONTAINER.appendChild(ADDPROJECT);
+    ADDPROJECT.type = 'text';
+    ADDPROJECT.id = 'add-project-input';
+    const INPUTLABEL = document.createElement('label');
+    INPUTCONTAINER.appendChild(INPUTLABEL);
+    INPUTLABEL.htmlFor = 'add-project-input';
+    
+    NAVIGATION.appendChild(ADDPROJECTCONTAINER);
+    ADDPROJECTCONTAINER.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            updateCurrentProject(ADDPROJECT.value);
+            createNewProject(ADDPROJECT.value);
+        }
+    })
+    } else {
+        removeProjectInput();
+    }
+
+}
+
+function removeProjectInput () {
+    const ADDPROJECTCONTAINER = document.getElementById('create-project');
+    ADDPROJECTCONTAINER.remove();
+}
+
+function createNewProject(title) {
+    const PROJECTSCONTAINER = document.getElementById('projects');
+    const PROJECTDIV = document.createElement('p');
+    PROJECTDIV.textContent = title;
+    PROJECTSCONTAINER.appendChild(PROJECTDIV);
+    if (document.getElementById('add-project-input')) {
+        removeProjectInput();
+    }
+}
+
+function loadProjects() {
+    const PROJECTLIST = JSON.parse(localStorage.getItem('projectList'));
+    for (const project in PROJECTLIST) {
+        createNewProject(PROJECTLIST[project]);
+    }
 }

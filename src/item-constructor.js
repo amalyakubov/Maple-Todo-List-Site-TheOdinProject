@@ -1,6 +1,6 @@
 import { getDate } from "date-fns";
 
-export function taskFactory(title, description, dueDate, priority, notes, currentProject) {
+export function taskFactory(title, description, dueDate, priority, currentProject, notes) {
     this.title = title;
     this.description = description;
     this.complete = false;
@@ -41,8 +41,29 @@ export function setDate(task, date) {
 
 
 function createNewProject(name) {
-    this.name = name;
-}  
+    this.name = name;       
+} 
+
+export function updateCurrentProject(projectname) {
+    localStorage.setItem('current-project', projectname);
+    updateLocalProjects(projectname);
+}
+
+function updateLocalProjects(projectname) {
+    let projectList = ['Today', 'Work', 'Personal'];
+    projectList.push(projectname);
+    // Save the projectList array in the localStorage
+    localStorage.setItem(('projectList'), JSON.stringify(projectList));
+}
+
+export function getCurrentProject() {
+    if (localStorage.getItem('current-project')) {
+    let currentProject = localStorage.getItem('current-project');
+    return currentProject;
+    } else {
+        return 'Today';
+    }
+}
 
 
 
