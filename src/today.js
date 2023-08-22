@@ -105,7 +105,8 @@ export function updateTaskDisplay() {
                 button.classList.add('hasevl');
                 task.classList.remove('done');
                 let widgetButton = document.getElementById('widget-button');
-                if (array[taskObject].complete) {
+                if (document.getElementById('widget')) {
+                    if (array[taskObject].complete) {
                         widgetButton.style.backgroundColor = 'black';
                         let p = document.getElementById('widget-header').lastElementChild;
                         p.style.textDecorationLine = 'line-through';
@@ -114,6 +115,7 @@ export function updateTaskDisplay() {
                         let p = document.getElementById('widget-header').lastElementChild;
                         p.style.textDecorationLine = 'none';
                     }
+                }
                 updateTaskDisplay();
             })
 
@@ -190,7 +192,12 @@ function createNewProject(title) {
 }
 
 function loadProjects() {
-    const PROJECTLIST = JSON.parse(localStorage.getItem('projectList'));
+    let PROJECTLIST = [];
+    for (const key in localStorage) {
+        if (localStorage.hasOwnProperty(key) && key !== 'current-project') {
+            PROJECTLIST.push(key);
+        }
+    }
     for (const project in PROJECTLIST) {
         createNewProject(PROJECTLIST[project]);
     }
