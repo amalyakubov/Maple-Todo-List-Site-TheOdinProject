@@ -100,9 +100,20 @@ export function updateTaskDisplay() {
 
         if (!task.classList.contains('hasevl')) {
             button.addEventListener('click', () => {
-                completeUncompleteTask(currentProjectTasks);
+                console.log(array[taskObject]);
+                completeUncompleteTask(array[taskObject]);
                 button.classList.add('hasevl');
                 task.classList.remove('done');
+                let widgetButton = document.getElementById('widget-button');
+                if (array[taskObject].complete) {
+                        widgetButton.style.backgroundColor = 'black';
+                        let p = document.getElementById('widget-header').lastElementChild;
+                        p.style.textDecorationLine = 'line-through';
+                } else {
+                        widgetButton.style.backgroundColor = 'white';
+                        let p = document.getElementById('widget-header').lastElementChild;
+                        p.style.textDecorationLine = 'none';
+                    }
                 updateTaskDisplay();
             })
 

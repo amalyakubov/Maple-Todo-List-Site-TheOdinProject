@@ -21,7 +21,6 @@ export function taskFactory(title, description, priority, currentProject, notes)
 export function completeUncompleteTask(task) {
     let currentProject = getCurrentProject();
     let currentTask = JSON.parse(localStorage.getItem(currentProject));
-    console.log(currentTask);
     if (task.complete === true) {
         currentTask['tasks'][task.title].complete = false;
         task.complete = false;

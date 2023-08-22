@@ -3,7 +3,6 @@ import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
 
-    console.log(taskObject);
 
     let currentProject = getCurrentProject();
 
@@ -152,6 +151,7 @@ export function loadWidget(task, taskObject) {
 
 function createTaskButton (task, taskObject) {
     let button = document.createElement('button');
+    button.id = 'widget-button';
     button.classList.add('do');
     
     button.addEventListener('click', () => {
