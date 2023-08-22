@@ -26,10 +26,10 @@ export function loadToday() {
 
     loadTaskCreator();
     addInputListeners();
-    updateTaskDisplay();
     AddProjectsEventListner();
     getCurrentProject();
     loadProjects();
+    updateTaskDisplay();
 }
 
 function loadTaskCreator() {
@@ -68,14 +68,9 @@ export function updateTaskDisplay() {
     }
 
     let array = [];
-    for (const key in localStorage) {
-        if (key !== 'current-project' && key !== 'projectList') {
-            if (!localStorage.hasOwnProperty(key)) {
-                continue;
-            }
-            let taskObject = JSON.parse(localStorage.getItem(key));
-            array.push(taskObject);
-        }
+    let currentProjectTasks = JSON.parse(localStorage.getItem(getCurrentProject())).tasks;
+    for (const task in currentProjectTasks) { 
+        array.push(currentProjectTasks[task]);
     }
     array.sort((function (a, b) {
         return a.dateCreated.localeCompare(b.dateCreated);
@@ -94,16 +89,18 @@ export function updateTaskDisplay() {
         // Adds the event listener to the task div that calls a widget load function
         if (!task.classList.contains('taskevl')) {
             task.addEventListener('click', () => {
-                let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
-                loadWidget(task, taskObject);
+                let currentProject = getCurrentProject();
+                let taskName = titleElement.textContent;
+                let taskObject = JSON.parse(localStorage.getItem(currentProject));
+                // let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
+                loadWidget(task, taskObject['tasks'][taskName]);
             })
             task.classList.add('taskevl');
         }
 
         if (!task.classList.contains('hasevl')) {
             button.addEventListener('click', () => {
-                let taskObject = JSON.parse(localStorage.getItem(titleElement.textContent));
-                completeUncompleteTask(taskObject);
+                completeUncompleteTask(currentProjectTasks);
                 button.classList.add('hasevl');
                 task.classList.remove('done');
                 updateTaskDisplay();

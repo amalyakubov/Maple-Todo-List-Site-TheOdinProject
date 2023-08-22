@@ -1,7 +1,11 @@
-import { completeUncompleteTask, setDescription, setPriority, setDate } from "./item-constructor";
-import currentProject, { updateTaskDisplay } from "./today";
+import { completeUncompleteTask, setDescription, setPriority, setDate, getCurrentProject } from "./item-constructor";
+import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
+
+    console.log(taskObject);
+
+    let currentProject = getCurrentProject();
 
     if (!document.getElementById('widget')) {
         const WIDGET = document.createElement('div');
@@ -124,14 +128,14 @@ export function loadWidget(task, taskObject) {
         }
     })
 
-    if (JSON.parse(localStorage.getItem(taskObject.title)).priority) {
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].priority) {
         let priority = JSON.parse(localStorage.getItem(taskObject.title)).priority;
         let select = document.querySelector('select');
         select.value = priority;
     }
 
-    if (JSON.parse(localStorage.getItem(taskObject.title)).dueDate) {
-        let date = JSON.parse(localStorage.getItem(taskObject.title)).dueDate;
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].dueDate) {
+        let date = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].dueDate;
         let final = date.substring(0, 10);
         DATEINPUT.value = final;
     }

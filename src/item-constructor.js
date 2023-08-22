@@ -1,27 +1,46 @@
 import { getDate } from "date-fns";
 
-export function taskFactory(title, description, dueDate, priority, currentProject, notes) {
-    this.title = title;
-    this.description = description;
-    this.complete = false;
-    this.dueDate = dueDate;
-    this.priority = priority;
-    this.notes = notes;
-    this.project = currentProject;
-    this.dateCreated = new Date();
+
+
+export function taskFactory(title, description, priority, currentProject, notes) {
+    const TASK = {
+        title:title,
+        description:description,
+        complete:false,
+        dueDate: new Date(),
+        priority: priority,
+        currentProject: currentProject,
+        notes: notes,
+    };
+    
+    return {
+        [title]: TASK
+    };
 }
 
 export function completeUncompleteTask(task) {
+    let currentProject = getCurrentProject();
+    let currentTask = JSON.parse(localStorage.getItem(currentProject));
+    console.log(currentTask);
     if (task.complete === true) {
+        currentTask['tasks'][task.title].complete = false;
         task.complete = false;
     } else {
+        currentTask['tasks'][task.title].complete = true;
         task.complete = true;
     }
-    localStorage.setItem(task.title, JSON.stringify(task));
+    localStorage.setItem(currentProject, JSON.stringify(currentTask));
 }
 
 export function updateTask(task) {
-    localStorage.setItem(task.title, JSON.stringify(task));
+    assignTaskToProject(task);
+}
+
+export function assignTaskToProject(task) {
+    let currentProject = getCurrentProject();
+    let project = JSON.parse(localStorage.getItem(currentProject));
+    project.tasks = task;
+    localStorage.setItem(currentProject, JSON.stringify(project));
 }
 
 export function setDescription(task, description) {
@@ -41,19 +60,29 @@ export function setDate(task, date) {
 
 
 function createNewProject(name) {
-    this.name = name;       
-} 
+    this.name = name;
+    this.tasks = {
+
+    };
+}
 
 export function updateCurrentProject(projectname) {
     localStorage.setItem('current-project', projectname);
     updateLocalProjects(projectname);
 }
 
+export function setIntiialProjects() {
+    let today = new createNewProject('Today');
+    localStorage.setItem(today.name, JSON.stringify(today));
+    let work = new createNewProject('Work');
+    localStorage.setItem(work.name, JSON.stringify(work));
+    let personal = new createNewProject('Personal');
+    localStorage.setItem(personal.name, JSON.stringify(personal));
+}
+
 function updateLocalProjects(projectname) {
-    let projectList = ['Today', 'Work', 'Personal'];
-    projectList.push(projectname);
-    // Save the projectList array in the localStorage
-    localStorage.setItem(('projectList'), JSON.stringify(projectList));
+    // Create and save the object to the localStorage
+    localStorage.setItem(projectname, JSON.stringify(new createNewProject(projectname)));
 }
 
 export function getCurrentProject() {
