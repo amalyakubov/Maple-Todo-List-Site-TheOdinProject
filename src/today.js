@@ -73,7 +73,7 @@ export function updateTaskDisplay() {
         array.push(currentProjectTasks[task]);
     }
     array.sort((function (a, b) {
-        return a.dateCreated.localeCompare(b.dateCreated);
+        return a.dueDate.localeCompare(b.dueDate);
     } ))
 
     for (const taskObject in array) {
@@ -91,16 +91,18 @@ export function updateTaskDisplay() {
             task.addEventListener('click', () => {
                 let currentProject = getCurrentProject();
                 let taskName = titleElement.textContent;
-                let taskObject = JSON.parse(localStorage.getItem(currentProject));
-                // let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
-                loadWidget(task, taskObject['tasks'][taskName]);
+                let taskObject = JSON.parse(localStorage.getItem(currentProject))['tasks'];
+                let artificialObject = {};
+                artificialObject[taskName] = taskObject[taskName];
+                console.table(artificialObject);
+                 // let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
+                loadWidget(task, artificialObject);
             })
             task.classList.add('taskevl');
         }
 
         if (!task.classList.contains('hasevl')) {
             button.addEventListener('click', () => {
-                console.log(array[taskObject]);
                 completeUncompleteTask(array[taskObject]);
                 button.classList.add('hasevl');
                 task.classList.remove('done');

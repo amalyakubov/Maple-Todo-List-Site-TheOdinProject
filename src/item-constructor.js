@@ -1,4 +1,5 @@
 import { getDate } from "date-fns";
+import currentProject from "./today";
 
 
 
@@ -37,8 +38,9 @@ export function updateTask(task) {
 
 export function assignTaskToProject(task) {
     let currentProject = getCurrentProject();
+    let insideTask = task[Object.keys(task)[0]];
     let project = JSON.parse(localStorage.getItem(currentProject));
-    project.tasks = task;
+    project.tasks[insideTask.title] = insideTask;
     localStorage.setItem(currentProject, JSON.stringify(project));
 }
 

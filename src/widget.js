@@ -37,8 +37,6 @@ export function loadWidget(task, taskObject) {
     let title = document.createElement('p');
     title.textContent = task.querySelector('p').textContent;
 
-    console.log(taskObject);
-
     if (taskObject.complete === true ) {
         title.style.textDecoration = 'line-through';
     }
@@ -127,14 +125,17 @@ export function loadWidget(task, taskObject) {
         }
     })
 
-    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].priority) {
-        let priority = JSON.parse(localStorage.getItem(taskObject.title)).priority;
+    let taskKey = Object.keys(taskObject)[0];
+
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority) {
+        let priority = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority;
         let select = document.querySelector('select');
         select.value = priority;
     }
 
-    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].dueDate) {
-        let date = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskObject.title].dueDate;
+
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].dueDate) {
+        let date = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].dueDate;
         let final = date.substring(0, 10);
         DATEINPUT.value = final;
     }
