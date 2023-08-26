@@ -96,6 +96,14 @@ function updateLocalProjects(projectname) {
     localStorage.setItem(projectname, JSON.stringify(new createNewProject(projectname)));
 }
 
+export function setStartProject() {
+    localStorage.setItem('current-project', 'Today');
+}
+
+export function setNewCurrentProject(newProject) {
+    localStorage.setItem('current-project', newProject);
+}
+
 export function getCurrentProject() {
     if (localStorage.getItem('current-project')) {
     let currentProject = localStorage.getItem('current-project');

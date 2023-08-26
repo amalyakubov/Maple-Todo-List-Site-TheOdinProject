@@ -1,5 +1,5 @@
 import { getDisplayDate } from "./time.js";
-import { completeUncompleteTask, getCurrentProject, setCurrentProject, taskFactory, updateCurrentProject, updateLocalProjects, updateTask } from "./item-constructor.js";
+import { completeUncompleteTask, getCurrentProject, setCurrentProject, setNewCurrentProject, setStartProject, taskFactory, updateCurrentProject, updateLocalProjects, updateTask } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
 let currentProject = 'Today';
@@ -190,6 +190,15 @@ function createNewProject(title) {
     if (document.getElementById('add-project-input')) {
         removeProjectInput();
     }
+    PROJECTDIV.addEventListener('click', ()=> {
+        setNewCurrentProject(PROJECTDIV.textContent);
+        switchProjects(PROJECTDIV.textContent);
+    })
+}
+
+function switchProjects(newProject) {
+    currentProject = newProject;
+    updateTaskDisplay()
 }
 
 function loadProjects() {
