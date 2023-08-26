@@ -1,7 +1,10 @@
-import { completeUncompleteTask, setDescription, setPriority, setDate } from "./item-constructor";
-import currentProject, { updateTaskDisplay } from "./today";
+import { completeUncompleteTask, setDescription, setPriority, setDate, getCurrentProject, removeTask } from "./item-constructor";
+import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
+
+    let currentProject = getCurrentProject();
+    let taskKey = Object.keys(taskObject)[0];
 
     if (!document.getElementById('widget')) {
         const WIDGET = document.createElement('div');
@@ -114,22 +117,36 @@ export function loadWidget(task, taskObject) {
         if (e.key === 'Enter') {
             setPriority(taskObject, SELECT.value);
         }
-    })
+    });
 
     DATEINPUT.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             setDate(taskObject, new Date(DATEINPUT.value));
         }
-    })
+    });
 
-    if (JSON.parse(localStorage.getItem(taskObject.title)).priority) {
-        let priority = JSON.parse(localStorage.getItem(taskObject.title)).priority;
+    const REMOVEBUTTON = document.createElement('button');
+    REMOVEBUTTON.id = 'del-button';
+    REMOVEBUTTON.textContent  = 'Delete';
+    if (!REMOVEBUTTON.classList.contains('hasevl')) {
+        REMOVEBUTTON.addEventListener('click', () => {
+            removeTask(taskObject);
+            WIDGET.remove();
+            updateTaskDisplay();
+        })
+    }
+    REMOVEBUTTON.classList.add('hasevl');
+    WIDGET.appendChild(REMOVEBUTTON);
+
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority) {
+        let priority = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority;
         let select = document.querySelector('select');
         select.value = priority;
     }
 
-    if (JSON.parse(localStorage.getItem(taskObject.title)).dueDate) {
-        let date = JSON.parse(localStorage.getItem(taskObject.title)).dueDate;
+
+    if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].dueDate) {
+        let date = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].dueDate;
         let final = date.substring(0, 10);
         DATEINPUT.value = final;
     }
@@ -146,6 +163,7 @@ export function loadWidget(task, taskObject) {
 
 function createTaskButton (task, taskObject) {
     let button = document.createElement('button');
+    button.id = 'widget-button';
     button.classList.add('do');
     
     button.addEventListener('click', () => {
@@ -181,7 +199,7 @@ function textAreaToParag(textarea, taskObject) {
         let textArea = document.createElement('textarea');
         textArea.innerText = p.textContent;
         p.remove();
-        let description = createDescription(taskObject);
+        let description = createDescription(taskObject, taskKey);
         description.value = p.textContent;
         DESCRIPTIONCONTAINER.appendChild(description);  
     })
@@ -191,7 +209,8 @@ function createDescription(taskObject) {
     const DESCRIPTIONINPUT = document.createElement('textarea');
     DESCRIPTIONINPUT.id = 'description';
     DESCRIPTIONINPUT.name = 'description';
-    let value = taskObject.description;
+    console.log(taskObject);
+    let value = taskObject[Object.keys(taskObject)[0]].description;
     DESCRIPTIONINPUT.value = value;
 
     DESCRIPTIONINPUT.addEventListener('click', () => {

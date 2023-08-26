@@ -1,5 +1,5 @@
 import { getDisplayDate } from "./time.js";
-import { completeUncompleteTask, taskFactory, updateTask } from "./item-constructor.js";
+import { completeUncompleteTask, getCurrentProject, setCurrentProject, setNewCurrentProject, setStartProject, taskFactory, updateCurrentProject, updateLocalProjects, updateTask } from "./item-constructor.js";
 import { loadWidget } from "./widget.js";
 
 let currentProject = 'Today';
@@ -26,6 +26,9 @@ export function loadToday() {
 
     loadTaskCreator();
     addInputListeners();
+    AddProjectsEventListner();
+    getCurrentProject();
+    loadProjects();
     updateTaskDisplay();
 }
 
@@ -65,15 +68,12 @@ export function updateTaskDisplay() {
     }
 
     let array = [];
-    for (const key in localStorage) {
-        if (!localStorage.hasOwnProperty(key)) {
-            continue;
-        }
-        let taskObject = JSON.parse(localStorage.getItem(key));
-        array.push(taskObject);
+    let currentProjectTasks = JSON.parse(localStorage.getItem(getCurrentProject())).tasks;
+    for (const task in currentProjectTasks) { 
+        array.push(currentProjectTasks[task]);
     }
     array.sort((function (a, b) {
-        return a.dateCreated.localeCompare(b.dateCreated);
+        return a.dueDate.localeCompare(b.dueDate);
     } ))
 
     for (const taskObject in array) {
@@ -89,18 +89,34 @@ export function updateTaskDisplay() {
         // Adds the event listener to the task div that calls a widget load function
         if (!task.classList.contains('taskevl')) {
             task.addEventListener('click', () => {
-                let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
-                loadWidget(task, taskObject);
+                let currentProject = getCurrentProject();
+                let taskName = titleElement.textContent;
+                let taskObject = JSON.parse(localStorage.getItem(currentProject))['tasks'];
+                let artificialObject = {};
+                artificialObject[taskName] = taskObject[taskName];
+                 // let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
+                loadWidget(task, artificialObject);
             })
             task.classList.add('taskevl');
         }
 
         if (!task.classList.contains('hasevl')) {
             button.addEventListener('click', () => {
-                let taskObject = JSON.parse(localStorage.getItem(titleElement.textContent));
-                completeUncompleteTask(taskObject);
+                completeUncompleteTask(array[taskObject]);
                 button.classList.add('hasevl');
                 task.classList.remove('done');
+                let widgetButton = document.getElementById('widget-button');
+                if (document.getElementById('widget')) {
+                    if (array[taskObject].complete) {
+                        widgetButton.style.backgroundColor = 'black';
+                        let p = document.getElementById('widget-header').lastElementChild;
+                        p.style.textDecorationLine = 'line-through';
+                } else {
+                        widgetButton.style.backgroundColor = 'white';
+                        let p = document.getElementById('widget-header').lastElementChild;
+                        p.style.textDecorationLine = 'none';
+                    }
+                }
                 updateTaskDisplay();
             })
 
@@ -116,6 +132,7 @@ export function updateTaskDisplay() {
             titleElement.style.textDecorationLine = 'line-through';
             button.style.backgroundColor = 'black';
         }
+        
     }   
 }
 
@@ -123,4 +140,75 @@ function resetInput () {
     let input = document.getElementById('taskInput');
     input.value = 'Add a task';
     document.activeElement.blur();
+}
+
+function AddProjectsEventListner() {
+    const BUTTON = document.getElementById('new-project');
+    BUTTON.addEventListener('click', () => {
+        showAddProjectWidget();
+    })
+}
+
+function showAddProjectWidget() {
+if (!document.getElementById('add-project-input')) {
+    const NAVIGATION = document.getElementById('navigation')
+    const ADDPROJECTCONTAINER = document.createElement('div');
+    ADDPROJECTCONTAINER.id = 'create-project';
+    const INPUTCONTAINER = document.createElement('div');
+    ADDPROJECTCONTAINER.appendChild(INPUTCONTAINER);
+    const ADDPROJECT = document.createElement('input');
+    INPUTCONTAINER.appendChild(ADDPROJECT);
+    ADDPROJECT.type = 'text';
+    ADDPROJECT.id = 'add-project-input';
+    const INPUTLABEL = document.createElement('label');
+    INPUTCONTAINER.appendChild(INPUTLABEL);
+    INPUTLABEL.htmlFor = 'add-project-input';
+    
+    NAVIGATION.appendChild(ADDPROJECTCONTAINER);
+    ADDPROJECTCONTAINER.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            updateCurrentProject(ADDPROJECT.value);
+            createNewProject(ADDPROJECT.value);
+        }
+    })
+    } else {
+        removeProjectInput();
+    }
+
+}
+
+function removeProjectInput () {
+    const ADDPROJECTCONTAINER = document.getElementById('create-project');
+    ADDPROJECTCONTAINER.remove();
+}
+
+function createNewProject(title) {
+    const PROJECTSCONTAINER = document.getElementById('projects');
+    const PROJECTDIV = document.createElement('p');
+    PROJECTDIV.textContent = title;
+    PROJECTSCONTAINER.appendChild(PROJECTDIV);
+    if (document.getElementById('add-project-input')) {
+        removeProjectInput();
+    }
+    PROJECTDIV.addEventListener('click', ()=> {
+        setNewCurrentProject(PROJECTDIV.textContent);
+        switchProjects(PROJECTDIV.textContent);
+    })
+}
+
+function switchProjects(newProject) {
+    currentProject = newProject;
+    updateTaskDisplay()
+}
+
+function loadProjects() {
+    let PROJECTLIST = [];
+    for (const key in localStorage) {
+        if (localStorage.hasOwnProperty(key) && key !== 'current-project') {
+            PROJECTLIST.push(key);
+        }
+    }
+    for (const project in PROJECTLIST) {
+        createNewProject(PROJECTLIST[project]);
+    }
 }
