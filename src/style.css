@@ -266,3 +266,12 @@ input {
     border: 2px solid black;
     padding: 8px;
 }
+
+#del-button {
+    display: flex;
+    position: relative;
+    bottom: -58%;
+    min-width: 100px;
+    min-height: 25px;
+    font-size: 24px;
+}

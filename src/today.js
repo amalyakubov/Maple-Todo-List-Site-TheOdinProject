@@ -94,7 +94,6 @@ export function updateTaskDisplay() {
                 let taskObject = JSON.parse(localStorage.getItem(currentProject))['tasks'];
                 let artificialObject = {};
                 artificialObject[taskName] = taskObject[taskName];
-                console.table(artificialObject);
                  // let taskObject =  JSON.parse(localStorage.getItem(titleElement.textContent));
                 loadWidget(task, artificialObject);
             })

@@ -45,18 +45,28 @@ export function assignTaskToProject(task) {
 }
 
 export function setDescription(task, description) {
-    task.description = description;
+    task[Object.keys(task)[0]].description = description;
     updateTask(task);
 } 
 
 export function setPriority (task, priority) {
-    task.priority = priority;
+    task[Object.keys(task)[0]].priority = priority;
     updateTask(task);
 }
 
 export function setDate(task, date) {
-    task.dueDate = date;
+    task[Object.keys(task)[0]].dueDate = date;
     updateTask(task);
+}
+
+export function removeTask(task) {
+    let currentProjectTasks = JSON.parse(localStorage.getItem(getCurrentProject()))['tasks'];
+    let taskTitle = task[Object.keys(task)[0]].title;
+    console.log(currentProjectTasks[taskTitle]);
+    delete currentProjectTasks[taskTitle];
+    let updatedProject = JSON.parse(localStorage.getItem(getCurrentProject()));
+    updatedProject['tasks'] = currentProjectTasks;
+    localStorage.setItem(getCurrentProject(), JSON.stringify(updatedProject));
 }
 
 

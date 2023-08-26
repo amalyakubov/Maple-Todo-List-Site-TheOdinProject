@@ -1,10 +1,10 @@
-import { completeUncompleteTask, setDescription, setPriority, setDate, getCurrentProject } from "./item-constructor";
+import { completeUncompleteTask, setDescription, setPriority, setDate, getCurrentProject, removeTask } from "./item-constructor";
 import { updateTaskDisplay } from "./today";
 
 export function loadWidget(task, taskObject) {
 
-
     let currentProject = getCurrentProject();
+    let taskKey = Object.keys(taskObject)[0];
 
     if (!document.getElementById('widget')) {
         const WIDGET = document.createElement('div');
@@ -117,15 +117,26 @@ export function loadWidget(task, taskObject) {
         if (e.key === 'Enter') {
             setPriority(taskObject, SELECT.value);
         }
-    })
+    });
 
     DATEINPUT.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             setDate(taskObject, new Date(DATEINPUT.value));
         }
-    })
+    });
 
-    let taskKey = Object.keys(taskObject)[0];
+    const REMOVEBUTTON = document.createElement('button');
+    REMOVEBUTTON.id = 'del-button';
+    REMOVEBUTTON.textContent  = 'Delete';
+    if (!REMOVEBUTTON.classList.contains('hasevl')) {
+        REMOVEBUTTON.addEventListener('click', () => {
+            removeTask(taskObject);
+            WIDGET.remove();
+            updateTaskDisplay();
+        })
+    }
+    REMOVEBUTTON.classList.add('hasevl');
+    WIDGET.appendChild(REMOVEBUTTON);
 
     if (JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority) {
         let priority = JSON.parse(localStorage.getItem(currentProject))['tasks'][taskKey].priority;
@@ -188,7 +199,7 @@ function textAreaToParag(textarea, taskObject) {
         let textArea = document.createElement('textarea');
         textArea.innerText = p.textContent;
         p.remove();
-        let description = createDescription(taskObject);
+        let description = createDescription(taskObject, taskKey);
         description.value = p.textContent;
         DESCRIPTIONCONTAINER.appendChild(description);  
     })
@@ -198,7 +209,8 @@ function createDescription(taskObject) {
     const DESCRIPTIONINPUT = document.createElement('textarea');
     DESCRIPTIONINPUT.id = 'description';
     DESCRIPTIONINPUT.name = 'description';
-    let value = taskObject.description;
+    console.log(taskObject);
+    let value = taskObject[Object.keys(taskObject)[0]].description;
     DESCRIPTIONINPUT.value = value;
 
     DESCRIPTIONINPUT.addEventListener('click', () => {
