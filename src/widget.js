@@ -199,7 +199,7 @@ function textAreaToParag(textarea, taskObject) {
         let textArea = document.createElement('textarea');
         textArea.innerText = p.textContent;
         p.remove();
-        let description = createDescription(taskObject, taskKey);
+        let description = createDescription(taskObject);
         description.value = p.textContent;
         DESCRIPTIONCONTAINER.appendChild(description);  
     })
